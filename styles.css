@@ -565,6 +565,20 @@ h2 {
   font-size: 0.95rem;
 }
 
+.family-photo {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+.volunteer-photo {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  margin: 0 auto 48px;
+}
+
 .volunteer-form {
   background: var(--off-white);
   border-radius: 16px;
