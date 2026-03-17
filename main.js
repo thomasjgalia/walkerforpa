@@ -17,13 +17,19 @@ navLinks.querySelectorAll('a').forEach(link => {
 });
 
 // Volunteer form submission (placeholder)
-document.getElementById('volunteerForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-  this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Thanks for signing up! We\'ll be in touch soon.</p>';
-});
+const volunteerForm = document.getElementById('volunteerForm');
+if (volunteerForm) {
+  volunteerForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Thanks for signing up! We\'ll be in touch soon.</p>';
+  });
+}
 
 // Contact form submission (placeholder)
-document.getElementById('contactForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-  this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Message sent! The campaign will get back to you shortly.</p>';
-});
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Message sent! The campaign will get back to you shortly.</p>';
+  });
+}

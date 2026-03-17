@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get Involved — Walker for PA State House</title>
+  <meta name="description" content="Join Joe Walker's campaign. Sign up to phone bank, canvass, or spread the word." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <nav id="navbar" class="solid">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Joe Walker</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Open menu">&#9776;</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="about.html">About</a></li>
+        <li><a href="issues.html">Issues</a></li>
+        <li><a href="volunteer.html">Get Involved</a></li>
+        <li><a href="vote.html">Vote</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="donate.html" class="btn btn-nav">Donate</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Join the Movement</h1>
+      <p>Campaigns are won by people power. Sign up to volunteer and help Joe win.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:48px">
+    <div class="container">
+      <div class="volunteer-grid">
+        <div class="volunteer-card">
+          <div class="volunteer-icon">&#128222;</div>
+          <h3>Phone Bank</h3>
+          <p>Call voters from home on your own schedule to spread Joe's message.</p>
+        </div>
+        <div class="volunteer-card">
+          <div class="volunteer-icon">&#128205;</div>
+          <h3>Canvass</h3>
+          <p>Knock on doors and talk to neighbors about why Joe is the right choice.</p>
+        </div>
+        <div class="volunteer-card">
+          <div class="volunteer-icon">&#128227;</div>
+          <h3>Spread the Word</h3>
+          <p>Share Joe's message on social media and with your network.</p>
+        </div>
+      </div>
+
+      <form class="volunteer-form" id="volunteerForm">
+        <h3>Sign Up to Volunteer</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="firstName" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone" placeholder="(555) 555-5555" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="zip">Zip Code</label>
+          <input type="text" id="zip" name="zip" placeholder="Zip code" maxlength="5" required />
+        </div>
+        <button type="submit" class="btn btn-primary full-width">Count Me In</button>
+        <p class="form-note">By signing up, you agree to receive campaign updates. You can unsubscribe at any time.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <strong>Joe Walker for Pennsylvania</strong>
+          <p>PA State House</p>
+        </div>
+        <nav class="footer-nav">
+          <a href="about.html">About</a>
+          <a href="issues.html">Issues</a>
+          <a href="donate.html">Donate</a>
+          <a href="volunteer.html">Volunteer</a>
+          <a href="vote.html">Vote</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <a href="donate.html" class="btn btn-primary">Donate</a>
+      </div>
+      <div class="footer-bottom">
+        <p>Paid for by Walker for PA &mdash; <a href="mailto:info@walkerforpa.com">info@walkerforpa.com</a></p>
+        <p>&copy; 2025 Walker for PA. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
