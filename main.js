@@ -49,6 +49,41 @@ if (volunteerForm) {
   });
 }
 
+// Yard sign form submission
+const yardSignForm = document.getElementById('yardSignForm');
+if (yardSignForm) {
+  yardSignForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const data = {
+      firstName: this.firstName.value.trim(),
+      lastName: this.lastName.value.trim(),
+      email: this.email.value.trim(),
+      phone: this.phone.value.trim(),
+      address: this.address.value.trim(),
+      city: this.city.value.trim(),
+      zip: this.zip.value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/yardsign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Server error');
+      this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Request received! A volunteer will be in touch to coordinate delivery.</p>';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Request My Sign';
+      alert('Something went wrong. Please try again or email us at info@walkerforpa.com');
+    }
+  });
+}
+
 // Contact form submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
