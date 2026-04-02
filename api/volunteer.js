@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, phone, zip } = req.body || {};
+  const { firstName, lastName, email, phone, zip, interests } = req.body || {};
 
   if (!firstName || !lastName || !email || !zip) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -44,6 +44,7 @@ module.exports = async function handler(req, res) {
         <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
         <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
         <p><strong>Zip Code:</strong> ${zip}</p>
+        <p><strong>Interests:</strong> ${interests && interests.length ? interests.map(i => `<br>&bull; ${i}`).join('') : 'None selected'}</p>
         <hr>
         <p style="color:#666;font-size:12px">Submitted via walkerforpa.com volunteer form</p>
       `,

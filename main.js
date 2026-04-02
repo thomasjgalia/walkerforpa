@@ -25,12 +25,16 @@ if (volunteerForm) {
     btn.disabled = true;
     btn.textContent = 'Submitting…';
 
+    const interests = Array.from(this.querySelectorAll('input[name="interests"]:checked'))
+      .map(cb => cb.value);
+
     const data = {
       firstName: this.firstName.value.trim(),
       lastName: this.lastName.value.trim(),
       email: this.email.value.trim(),
       phone: this.phone.value.trim(),
       zip: this.zip.value.trim(),
+      interests,
     };
 
     try {

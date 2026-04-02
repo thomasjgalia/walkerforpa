@@ -716,6 +716,38 @@ h2 {
   min-height: 120px;
 }
 
+.form-label-section {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  color: var(--navy);
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  accent-color: var(--blue-light);
+  cursor: pointer;
+}
+
 .form-note {
   color: var(--gray);
   font-size: 0.8rem;
