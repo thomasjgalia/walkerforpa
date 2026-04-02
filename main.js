@@ -16,20 +16,66 @@ navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => navLinks.classList.remove('open'));
 });
 
-// Volunteer form submission (placeholder)
+// Volunteer form submission
 const volunteerForm = document.getElementById('volunteerForm');
 if (volunteerForm) {
-  volunteerForm.addEventListener('submit', function (e) {
+  volunteerForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Thanks for signing up! We\'ll be in touch soon.</p>';
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const data = {
+      firstName: this.firstName.value.trim(),
+      lastName: this.lastName.value.trim(),
+      email: this.email.value.trim(),
+      phone: this.phone.value.trim(),
+      zip: this.zip.value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/volunteer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Server error');
+      this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Thanks for signing up! We\'ll be in touch soon.</p>';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Count Me In';
+      alert('Something went wrong. Please try again or email us at info@walkerforpa.com');
+    }
   });
 }
 
-// Contact form submission (placeholder)
+// Contact form submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', function (e) {
+  contactForm.addEventListener('submit', async function (e) {
     e.preventDefault();
-    this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Message sent! The campaign will get back to you shortly.</p>';
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const data = {
+      name: this.elements['name'].value.trim(),
+      email: this.elements['email'].value.trim(),
+      message: this.elements['message'].value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Server error');
+      this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Message sent! The campaign will get back to you shortly.</p>';
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+      alert('Something went wrong. Please try again or email us at info@walkerforpa.com');
+    }
   });
 }
