@@ -721,7 +721,7 @@ h2 {
   font-weight: 600;
   font-size: 0.95rem;
   margin-bottom: 12px;
-  color: var(--navy);
+  color: var(--blue-dark);
 }
 
 .checkbox-group {
@@ -903,7 +903,7 @@ h2 {
    ============================================================ */
 
 .countdown-bar {
-  background: var(--navy);
+  background: var(--blue-dark);
   color: var(--white);
   padding: 32px 0;
   text-align: center;
