@@ -16,6 +16,30 @@ navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => navLinks.classList.remove('open'));
 });
 
+// Election Day countdown
+const electionDate = new Date('2026-11-03T00:00:00');
+const cdDays = document.getElementById('cd-days');
+const cdHours = document.getElementById('cd-hours');
+const cdMinutes = document.getElementById('cd-minutes');
+const cdSeconds = document.getElementById('cd-seconds');
+
+if (cdDays) {
+  function updateCountdown() {
+    const now = new Date();
+    const diff = electionDate - now;
+    if (diff <= 0) {
+      cdDays.textContent = cdHours.textContent = cdMinutes.textContent = cdSeconds.textContent = '0';
+      return;
+    }
+    cdDays.textContent    = Math.floor(diff / 86400000);
+    cdHours.textContent   = Math.floor((diff % 86400000) / 3600000);
+    cdMinutes.textContent = Math.floor((diff % 3600000) / 60000);
+    cdSeconds.textContent = Math.floor((diff % 60000) / 1000);
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
 // Volunteer form submission
 const volunteerForm = document.getElementById('volunteerForm');
 if (volunteerForm) {
