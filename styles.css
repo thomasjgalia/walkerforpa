@@ -235,7 +235,7 @@ a:hover { color: var(--blue); }
   position: relative;
   z-index: 3;
   max-width: 700px;
-  padding: 160px 24px 60px;
+  padding: 260px 24px 60px;
   margin: 0 auto;
   text-align: center;
 }
