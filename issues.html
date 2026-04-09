@@ -47,6 +47,7 @@
           <div class="issue-icon">&#127807;</div>
           <h3>Lowering Property Taxes</h3>
           <p>Hardworking families and seniors on fixed incomes are being priced out of their own homes. We need responsible spending and sensible budgets that prioritize keeping your hard-earned money exactly where it belongs—in your pocket.</p>
+          <button class="learn-more-link" onclick="document.getElementById('modalPropertyTax').classList.add('modal-open')">Learn More &rarr;</button>
         </div>
         <div class="issue-card">
           <div class="issue-icon">&#129657;</div>
@@ -107,6 +108,39 @@
       </div>
     </div>
   </footer>
+
+  <!-- Property Tax Modal -->
+  <div id="modalPropertyTax" class="modal-backdrop" onclick="if(event.target===this)this.classList.remove('modal-open')">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalPropertyTaxTitle">
+      <button class="modal-close" onclick="document.getElementById('modalPropertyTax').classList.remove('modal-open')" aria-label="Close">&times;</button>
+      <h2 id="modalPropertyTaxTitle">Lowering Property Taxes: Joe's Plan</h2>
+
+      <h3>1. Expand the Senior Property Tax/Rent Rebate (PTRR)</h3>
+      <p>Currently, Pennsylvania offers a rebate to seniors (65+), widows/widowers (50+), and those with disabilities.</p>
+      <p><strong>The Action:</strong> As a State Rep, Joe will sponsor legislation to increase the income eligibility thresholds and raise the maximum rebate amounts.</p>
+      <p><strong>The Goal:</strong> Many seniors in Haverford are "house rich and cash poor"—they own valuable homes but live on fixed incomes that slightly exceed current limits. Adjusting these caps for inflation ensures they aren't taxed out of homes they've owned for 40 years.</p>
+
+      <h3>2. Champion "Longtime Owner Occupant" (LOOP) Legislation</h3>
+      <p>Philadelphia has a program called LOOP, but it isn't currently available to suburban townships like Haverford or Marple without specific state enabling legislation.</p>
+      <p><strong>The Action:</strong> Propose a bill that allows Delaware County to implement its own LOOP-style program. This would cap assessment increases for residents who have lived in their homes for 10+ years and meet certain income criteria.</p>
+      <p><strong>The Goal:</strong> It prevents "gentrification tax hikes," where a surge in local property values (common in Havertown) leads to a massive tax spike that long-term residents cannot afford.</p>
+
+      <h3>3. Increase the Homestead/Farmstead Exclusion (Act 1)</h3>
+      <p>Under Act 1, a portion of gambling revenue is used to lower the assessed value of primary residences.</p>
+      <p><strong>The Action:</strong> Fight for a larger share of state gaming or sales tax revenue to be diverted specifically into the Property Tax Relief Fund.</p>
+      <p><strong>The Goal:</strong> This provides an immediate, "bottom-line" reduction on the school tax bill for every homeowner in the district, regardless of age. Joe will push for a formula that favors "high-burden" districts like those in Delaware County.</p>
+
+      <h3>4. Implement Local "Tax Freezes" for Low-Income Seniors</h3>
+      <p>Pennsylvania law allows for a senior citizen tax freeze, but it requires local jurisdictions to opt-in and often needs clearer state guidance to be effective.</p>
+      <p><strong>The Action:</strong> Advocate for a statewide mandate or a simplified "opt-in" for townships to freeze property tax rates at the level they were when the resident turned 65 (provided they meet income requirements).</p>
+      <p><strong>The Goal:</strong> This provides seniors with predictability. Even if the township or school board raises taxes, the senior's bill remains the same, protecting their retirement savings.</p>
+
+      <h3>5. Create a "Volunteer Tax Credit" Program</h3>
+      <p>Some PA municipalities have experimented with "Tax Help for Volunteers."</p>
+      <p><strong>The Action:</strong> Create a state-authorized framework where seniors can volunteer for the township (e.g., at the Haverford Township Free Library, local parks, or administrative offices) in exchange for a direct credit toward their municipal property taxes.</p>
+      <p><strong>The Goal:</strong> This helps seniors stay active and involved in the community while providing them a tangible way to "earn" a reduction in their tax burden.</p>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>

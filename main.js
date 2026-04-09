@@ -112,6 +112,13 @@ if (yardSignForm) {
   });
 }
 
+// Close modals on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-backdrop.modal-open').forEach(m => m.classList.remove('modal-open'));
+  }
+});
+
 // Contact form submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
