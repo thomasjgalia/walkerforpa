@@ -63,8 +63,7 @@ module.exports = async function handler(req, res) {
     console.error('Google Sheets error:', sheetErr);
   }
 
-  // Fire and forget
-  sendToHub('volunteer', {
+  await sendToHub('volunteer', {
     first_name: firstName,
     last_name:  lastName,
     email,

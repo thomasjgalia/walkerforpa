@@ -35,8 +35,7 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to send email' });
   }
 
-  // Fire and forget — does not block response
-  sendToHub('yard_sign', {
+  await sendToHub('yard_sign', {
     first_name: firstName,
     last_name:  lastName,
     email,
