@@ -1,5 +1,6 @@
 const { Resend } = require('resend');
 const { google } = require('googleapis');
+const { sendToHub } = require('./_ingest');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -26,7 +27,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, phone, address, city, state, zip, interests } = req.body || {};
+  const { firstName, lastName, email, mobile, street, city, state, zip, interests } = req.body || {};
 
   if (!firstName || !lastName || !email || !zip) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -42,8 +43,8 @@ module.exports = async function handler(req, res) {
         <h2>New Volunteer Sign-Up</h2>
         <p><strong>Name:</strong> ${firstName} ${lastName}</p>
         <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-        <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-        <p><strong>Address:</strong> ${address || 'Not provided'}</p>
+        <p><strong>Mobile:</strong> ${mobile || 'Not provided'}</p>
+        <p><strong>Address:</strong> ${street || 'Not provided'}</p>
         <p><strong>City, State Zip:</strong> ${[city, state, zip].filter(Boolean).join(', ')}</p>
         <p><strong>Interests:</strong> ${interests && interests.length ? interests.map(i => `<br>&bull; ${i}`).join('') : 'None selected'}</p>
         <hr>
@@ -57,11 +58,22 @@ module.exports = async function handler(req, res) {
 
   try {
     const timestamp = new Date().toISOString();
-    await appendToSheet([timestamp, firstName, lastName, email, phone || '', address || '', city || '', state || '', zip]);
+    await appendToSheet([timestamp, firstName, lastName, email, mobile || '', street || '', city || '', state || '', zip]);
   } catch (sheetErr) {
-    // Log but don't fail the request — email already sent
     console.error('Google Sheets error:', sheetErr);
   }
+
+  // Fire and forget
+  sendToHub('volunteer', {
+    first_name: firstName,
+    last_name:  lastName,
+    email,
+    mobile,
+    street,
+    city,
+    state: state || 'PA',
+    zip,
+  });
 
   return res.status(200).json({ success: true });
 };

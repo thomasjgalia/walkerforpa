@@ -56,7 +56,10 @@ if (volunteerForm) {
       firstName: this.firstName.value.trim(),
       lastName: this.lastName.value.trim(),
       email: this.email.value.trim(),
-      phone: this.phone.value.trim(),
+      mobile: this.mobile.value.trim(),
+      street: this.street.value.trim(),
+      city: this.city.value.trim(),
+      state: this.state.value,
       zip: this.zip.value.trim(),
       interests,
     };
@@ -90,9 +93,10 @@ if (yardSignForm) {
       firstName: this.firstName.value.trim(),
       lastName: this.lastName.value.trim(),
       email: this.email.value.trim(),
-      phone: this.phone.value.trim(),
-      address: this.address.value.trim(),
+      mobile: this.mobile.value.trim(),
+      street: this.street.value.trim(),
       city: this.city.value.trim(),
+      state: this.state.value,
       zip: this.zip.value.trim(),
     };
 
@@ -129,8 +133,14 @@ if (contactForm) {
     btn.textContent = 'Sending…';
 
     const data = {
-      name: this.elements['name'].value.trim(),
+      firstName: this.firstName.value.trim(),
+      lastName: this.lastName.value.trim(),
       email: this.elements['email'].value.trim(),
+      mobile: this.mobile.value.trim(),
+      street: this.street.value.trim(),
+      city: this.city.value.trim(),
+      state: this.state.value,
+      zip: this.zip.value.trim(),
       message: this.elements['message'].value.trim(),
     };
 
