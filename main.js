@@ -126,6 +126,13 @@ document.addEventListener('keydown', (e) => {
 // Contact form submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
+  const smsOptIn = document.getElementById('smsOptIn');
+  const mobileInput = document.getElementById('mobile');
+
+  smsOptIn.addEventListener('change', function () {
+    mobileInput.required = this.checked;
+  });
+
   contactForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = this.querySelector('button[type="submit"]');
@@ -142,6 +149,7 @@ if (contactForm) {
       state: this.state.value,
       zip: this.zip.value.trim(),
       message: this.elements['message'].value.trim(),
+      smsOptIn: smsOptIn.checked,
     };
 
     try {

@@ -724,6 +724,11 @@ h2 {
   color: var(--blue-dark);
 }
 
+.form-checkbox-group label {
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
 .checkbox-group {
   display: flex;
   flex-direction: column;
