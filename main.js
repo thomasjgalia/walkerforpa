@@ -77,24 +77,45 @@ function fmtEventTime(isoStr) {
         ? `<a href="${ev.event_url}" target="_blank" rel="noopener" class="btn btn-primary">${ev.cta_label} &#8599;</a>`
         : `<a href="${ev.event_url}" target="_blank" rel="noopener" class="event-details-link">More info &#8599;</a>`
       : '';
+
+    const mapQ = [ev.address, ev.city, ev.state, ev.zip].filter(Boolean).join(', ');
+    const mapStrip = mapQ ? `
+      <div class="event-map-wrap">
+        <div class="event-map-strip">
+          <img class="event-map-img" src="/api/mapimage?q=${encodeURIComponent(mapQ)}" alt="Map for ${ev.name.trim()}" loading="lazy" />
+        </div>
+        <button class="event-map-toggle">&#9660; Expand map</button>
+      </div>` : '';
+
     return `
       <div class="event-card">
-        <div class="event-date-badge">
-          <div class="event-date-month">${month}</div>
-          <div class="event-date-day">${day}</div>
-          <div class="event-date-year">${year}</div>
+        <div class="event-card-main">
+          <div class="event-date-badge">
+            <div class="event-date-month">${month}</div>
+            <div class="event-date-day">${day}</div>
+            <div class="event-date-year">${year}</div>
+          </div>
+          <div class="event-body">
+            <div class="event-name">${ev.name}</div>
+            ${meta ? `<div class="event-meta">${meta}</div>` : ''}
+            ${notes}
+          </div>
+          <div class="event-actions">
+            ${detailsBtn}
+            <button class="btn btn-primary event-register-btn" data-id="${ev.id}" data-name="${ev.name.trim()}">Join Us!</button>
+          </div>
         </div>
-        <div class="event-body">
-          <div class="event-name">${ev.name}</div>
-          ${meta ? `<div class="event-meta">${meta}</div>` : ''}
-          ${notes}
-        </div>
-        <div class="event-actions">
-          ${detailsBtn}
-          <button class="btn btn-primary event-register-btn" data-id="${ev.id}" data-name="${ev.name.trim()}">Join Us!</button>
-        </div>
+        ${mapStrip}
       </div>`;
   }).join('');
+
+  container.addEventListener('click', e => {
+    const toggle = e.target.closest('.event-map-toggle');
+    if (!toggle) return;
+    const strip = toggle.closest('.event-map-wrap').querySelector('.event-map-strip');
+    const expanded = strip.classList.toggle('expanded');
+    toggle.textContent = expanded ? '▲ Show less' : '▼ Expand map';
+  });
 
   // Registration modal
   const modal = document.createElement('div');
