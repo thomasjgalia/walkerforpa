@@ -91,7 +91,7 @@ function fmtEventTime(isoStr) {
         </div>
         <div class="event-actions">
           ${detailsBtn}
-          <button class="btn btn-primary event-register-btn" data-id="${ev.id}" data-name="${ev.name.trim()}">Register</button>
+          <button class="btn btn-primary event-register-btn" data-id="${ev.id}" data-name="${ev.name.trim()}">Join Us!</button>
         </div>
       </div>`;
   }).join('');
