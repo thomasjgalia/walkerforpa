@@ -12,9 +12,84 @@ navToggle.addEventListener('click', () => {
 });
 
 // Close mobile nav when a link is clicked
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => navLinks.classList.remove('open'));
-});
+function attachNavClose() {
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('open'));
+  });
+}
+attachNavClose();
+
+// Events: fetch upcoming, inject nav link if any exist, render page if on events.html
+function fmtEventDate(iso) {
+  const [y, m, d] = iso.split('-');
+  return { month: new Date(`${iso}T12:00:00`).toLocaleString('en-US', { month: 'short' }), day: +d, year: y };
+}
+
+function fmtEventTime(isoStr) {
+  const d = new Date(isoStr);
+  let h = d.getUTCHours();
+  const m = d.getUTCMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}${m ? ':' + String(m).padStart(2, '0') : ''} ${ampm}`;
+}
+
+(async function loadEvents() {
+  let items = [];
+  try {
+    const res = await fetch('/api/events');
+    if (res.ok) {
+      const data = await res.json();
+      items = data.items || [];
+    }
+  } catch { /* swallow — no events shown */ }
+
+  if (items.length) {
+    const contactLi = Array.from(navLinks.querySelectorAll('li'))
+      .find(li => li.querySelector('a[href="contact.html"]'));
+    if (contactLi) {
+      const eventsLi = document.createElement('li');
+      eventsLi.innerHTML = '<a href="events.html">Events</a>';
+      navLinks.insertBefore(eventsLi, contactLi);
+      eventsLi.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
+    }
+  }
+
+  const container = document.getElementById('eventsContainer');
+  if (!container) return;
+
+  if (!items.length) {
+    container.innerHTML = '<p class="events-loading">No upcoming events at this time. Check back soon.</p>';
+    return;
+  }
+
+  container.innerHTML = items.map(ev => {
+    const { month, day, year } = fmtEventDate(ev.event_date);
+    const timePart = ev.event_time ? `&#128336; ${fmtEventTime(ev.event_time)}` : '';
+    const locParts = [ev.location_name, ev.city].filter(Boolean);
+    const locPart  = locParts.length ? `&#128205; ${locParts.join(', ')}` : '';
+    const meta     = [timePart, locPart].filter(Boolean)
+      .map(s => `<span>${s}</span>`).join('');
+    const notes    = ev.notes ? `<p class="event-notes">${ev.notes}</p>` : '';
+    const btn      = ev.event_url
+      ? `<div class="event-actions"><a href="${ev.event_url}" target="_blank" rel="noopener" class="btn btn-primary">Details</a></div>`
+      : '';
+    return `
+      <div class="event-card">
+        <div class="event-date-badge">
+          <div class="event-date-month">${month}</div>
+          <div class="event-date-day">${day}</div>
+          <div class="event-date-year">${year}</div>
+        </div>
+        <div class="event-body">
+          <div class="event-name">${ev.name}</div>
+          ${meta ? `<div class="event-meta">${meta}</div>` : ''}
+          ${notes}
+        </div>
+        ${btn}
+      </div>`;
+  }).join('');
+})();
 
 // Election Day countdown
 const electionDate = new Date('2026-11-03T00:00:00');

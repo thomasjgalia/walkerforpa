@@ -1050,6 +1050,135 @@ h2 {
 }
 
 /* ============================================================
+   EVENTS
+   ============================================================ */
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.events-loading {
+  text-align: center;
+  color: var(--gray);
+  padding: 48px 0;
+}
+
+.event-card {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.event-date-badge {
+  background: var(--blue-dark);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 24px;
+  min-width: 88px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.event-date-month {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+}
+
+.event-date-day {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  margin: 2px 0;
+}
+
+.event-date-year {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+}
+
+.event-body {
+  padding: 20px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+
+.event-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--blue-dark);
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.88rem;
+  color: var(--gray);
+}
+
+.event-meta span::before {
+  margin-right: 4px;
+}
+
+.event-notes {
+  font-size: 0.88rem;
+  color: var(--gray-dark);
+  margin-top: 4px;
+}
+
+.event-actions {
+  padding: 20px 24px 20px 0;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .event-card {
+    flex-direction: column;
+  }
+
+  .event-date-badge {
+    flex-direction: row;
+    gap: 8px;
+    padding: 14px 20px;
+    min-width: unset;
+    justify-content: flex-start;
+  }
+
+  .event-date-day {
+    font-size: 1.4rem;
+  }
+
+  .event-actions {
+    padding: 0 20px 20px;
+  }
+}
+
+/* ============================================================
    FOOTER
    ============================================================ */
 
