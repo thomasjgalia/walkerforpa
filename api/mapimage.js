@@ -14,6 +14,7 @@ module.exports = async function handler(req, res) {
     scale: '2',
     maptype: 'roadmap',
     markers: `color:red|${q}`,
+    style: 'feature:poi|element:labels|visibility:off',
     key,
   });
 
