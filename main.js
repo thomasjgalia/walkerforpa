@@ -73,7 +73,7 @@ function fmtEventTime(isoStr) {
       .map(s => `<span>${s}</span>`).join('');
     const notes    = ev.notes ? `<p class="event-notes">${ev.notes}</p>` : '';
     const detailsBtn = ev.event_url
-      ? `<a href="${ev.event_url}" target="_blank" rel="noopener" class="btn btn-outline event-details-btn">Details</a>`
+      ? `<a href="${ev.event_url}" target="_blank" rel="noopener" class="event-details-link">More info &#8599;</a>`
       : '';
     return `
       <div class="event-card">
