@@ -79,10 +79,13 @@ function fmtEventTime(isoStr) {
       : '';
 
     const mapQ = [ev.address, ev.city, ev.state, ev.zip].filter(Boolean).join(', ');
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQ)}`;
     const mapStrip = mapQ ? `
       <div class="event-map-wrap">
         <div class="event-map-strip">
-          <img class="event-map-img" src="/api/mapimage?q=${encodeURIComponent(mapQ)}" alt="Map for ${ev.name.trim()}" loading="lazy" />
+          <a href="${mapsUrl}" target="_blank" rel="noopener" aria-label="Open in Google Maps">
+            <img class="event-map-img" src="/api/mapimage?q=${encodeURIComponent(mapQ)}" alt="Map for ${ev.name.trim()}" loading="lazy" />
+          </a>
         </div>
         <button class="event-map-toggle">&#9660; Expand map</button>
       </div>` : '';

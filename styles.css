@@ -1108,6 +1108,7 @@ h2 {
   object-fit: cover;
   object-position: center;
   display: block;
+  cursor: pointer;
 }
 
 .event-map-toggle {
