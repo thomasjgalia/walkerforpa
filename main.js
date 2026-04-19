@@ -21,8 +21,9 @@ attachNavClose();
 
 // Events: fetch upcoming, inject nav link if any exist, render page if on events.html
 function fmtEventDate(iso) {
-  const [y, m, d] = iso.split('-');
-  return { month: new Date(`${iso}T12:00:00`).toLocaleString('en-US', { month: 'short' }), day: +d, year: y };
+  const datePart = iso.slice(0, 10);
+  const [y, , d] = datePart.split('-');
+  return { month: new Date(`${datePart}T12:00:00`).toLocaleString('en-US', { month: 'short' }), day: +d, year: y };
 }
 
 function fmtEventTime(isoStr) {
