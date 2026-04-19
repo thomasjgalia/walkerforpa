@@ -72,8 +72,8 @@ function fmtEventTime(isoStr) {
     const meta     = [timePart, locPart].filter(Boolean)
       .map(s => `<span>${s}</span>`).join('');
     const notes    = ev.notes ? `<p class="event-notes">${ev.notes}</p>` : '';
-    const btn      = ev.event_url
-      ? `<div class="event-actions"><a href="${ev.event_url}" target="_blank" rel="noopener" class="btn btn-primary">Details</a></div>`
+    const detailsBtn = ev.event_url
+      ? `<a href="${ev.event_url}" target="_blank" rel="noopener" class="btn btn-outline event-details-btn">Details</a>`
       : '';
     return `
       <div class="event-card">
@@ -87,9 +87,87 @@ function fmtEventTime(isoStr) {
           ${meta ? `<div class="event-meta">${meta}</div>` : ''}
           ${notes}
         </div>
-        ${btn}
+        <div class="event-actions">
+          ${detailsBtn}
+          <button class="btn btn-primary event-register-btn" data-id="${ev.id}" data-name="${ev.name.trim()}">Register</button>
+        </div>
       </div>`;
   }).join('');
+
+  // Registration modal
+  const modal = document.createElement('div');
+  modal.className = 'modal-backdrop';
+  modal.id = 'registerModal';
+  modal.innerHTML = `
+    <div class="modal-box">
+      <button class="modal-close" id="registerModalClose">&times;</button>
+      <h2 id="registerModalTitle">Register for Event</h2>
+      <form id="registerForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="regFirstName">First Name</label>
+            <input type="text" id="regFirstName" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label for="regLastName">Last Name</label>
+            <input type="text" id="regLastName" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="regPhone">Phone</label>
+          <input type="tel" id="regPhone" placeholder="(555) 555-5555" />
+        </div>
+        <button type="submit" class="btn btn-primary full-width">Sign Me Up</button>
+      </form>
+    </div>`;
+  document.body.appendChild(modal);
+
+  let activeEventId = null;
+
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('.event-register-btn');
+    if (!btn) return;
+    activeEventId = btn.dataset.id;
+    document.getElementById('registerModalTitle').textContent = `Register — ${btn.dataset.name}`;
+    document.getElementById('registerForm').reset();
+    document.getElementById('registerForm').style.display = '';
+    modal.classList.add('modal-open');
+  });
+
+  document.getElementById('registerModalClose').addEventListener('click', () => modal.classList.remove('modal-open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('modal-open'); });
+
+  document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventId:    activeEventId,
+          first_name: document.getElementById('regFirstName').value.trim(),
+          last_name:  document.getElementById('regLastName').value.trim(),
+          email:      document.getElementById('regEmail').value.trim(),
+          phone:      document.getElementById('regPhone').value.trim() || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error('Server error');
+      this.style.display = 'none';
+      this.insertAdjacentHTML('afterend', '<p style="text-align:center;font-size:1.1rem;font-weight:700;color:#1a3a6b;padding:24px 0">You\'re registered! Check your email for confirmation.</p>');
+    } catch {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign Me Up';
+      alert('Something went wrong. Please try again or email us at info@walkerforpa.com');
+    }
+  });
 })();
 
 // Election Day countdown

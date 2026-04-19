@@ -1152,7 +1152,10 @@ h2 {
 .event-actions {
   padding: 20px 24px 20px 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -1175,6 +1178,9 @@ h2 {
 
   .event-actions {
     padding: 0 20px 20px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
   }
 }
 
