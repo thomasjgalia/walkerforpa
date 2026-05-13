@@ -362,9 +362,15 @@ if (cdDays) {
   setInterval(updateCountdown, 1000);
 }
 
-// Volunteer form submission
+// Volunteer / contact form submission
 const volunteerForm = document.getElementById('volunteerForm');
 if (volunteerForm) {
+  const smsOptIn   = document.getElementById('smsOptIn');
+  const mobileInput = document.getElementById('mobile');
+  smsOptIn.addEventListener('change', function () {
+    mobileInput.required = this.checked;
+  });
+
   volunteerForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = this.querySelector('button[type="submit"]');
@@ -376,14 +382,16 @@ if (volunteerForm) {
 
     const data = {
       firstName: this.firstName.value.trim(),
-      lastName: this.lastName.value.trim(),
-      email: this.email.value.trim(),
-      mobile: this.mobile.value.trim(),
-      street: this.street.value.trim(),
-      city: this.city.value.trim(),
-      state: this.state.value,
-      zip: this.zip.value.trim(),
+      lastName:  this.lastName.value.trim(),
+      email:     this.email.value.trim(),
+      mobile:    this.mobile.value.trim(),
+      street:    this.street.value.trim(),
+      city:      this.city.value.trim(),
+      state:     this.state.value,
+      zip:       this.zip.value.trim(),
       interests,
+      message:   document.getElementById('volunteerMessage').value.trim(),
+      smsOptIn:  smsOptIn.checked,
     };
 
     try {
@@ -393,7 +401,7 @@ if (volunteerForm) {
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error('Server error');
-      this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Thanks for signing up! We\'ll be in touch soon.</p>';
+      this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Thanks for reaching out! The campaign will be in touch soon.</p>';
     } catch {
       btn.disabled = false;
       btn.textContent = 'Count Me In';
@@ -446,47 +454,3 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Contact form submission
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-  const smsOptIn = document.getElementById('smsOptIn');
-  const mobileInput = document.getElementById('mobile');
-
-  smsOptIn.addEventListener('change', function () {
-    mobileInput.required = this.checked;
-  });
-
-  contactForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const btn = this.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
-
-    const data = {
-      firstName: this.firstName.value.trim(),
-      lastName: this.lastName.value.trim(),
-      email: this.elements['email'].value.trim(),
-      mobile: this.mobile.value.trim(),
-      street: this.street.value.trim(),
-      city: this.city.value.trim(),
-      state: this.state.value,
-      zip: this.zip.value.trim(),
-      message: this.elements['message'].value.trim(),
-      smsOptIn: smsOptIn.checked,
-    };
-
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error('Server error');
-      this.innerHTML = '<p style="text-align:center;font-size:1.2rem;font-weight:700;color:#1a3a6b;padding:32px 0">Message sent! The campaign will get back to you shortly.</p>';
-    } catch {
-      btn.disabled = false;
-      btn.textContent = 'Send Message';
-      alert('Something went wrong. Please try again or email us at info@walkerforpa.com');
-    }
-  });
-}

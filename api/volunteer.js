@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, mobile, street, city, state, zip, interests } = req.body || {};
+  const { firstName, lastName, email, mobile, street, city, state, zip, interests, message, smsOptIn } = req.body || {};
 
   if (!firstName || !lastName || !email || !zip) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -47,8 +47,10 @@ module.exports = async function handler(req, res) {
         <p><strong>Address:</strong> ${street || 'Not provided'}</p>
         <p><strong>City, State Zip:</strong> ${[city, state, zip].filter(Boolean).join(', ')}</p>
         <p><strong>Interests:</strong> ${interests && interests.length ? interests.map(i => `<br>&bull; ${i}`).join('') : 'None selected'}</p>
+        <p><strong>SMS Opt-In:</strong> ${smsOptIn ? 'Yes' : 'No'}</p>
+        ${message ? `<p><strong>Message:</strong></p><p>${message.replace(/\n/g, '<br>')}</p>` : ''}
         <hr>
-        <p style="color:#666;font-size:12px">Submitted via walkerforpa.com volunteer form</p>
+        <p style="color:#666;font-size:12px">Submitted via walkerforpa.com</p>
       `,
     });
   } catch (emailErr) {
@@ -72,6 +74,7 @@ module.exports = async function handler(req, res) {
     city,
     state: state || 'PA',
     zip,
+    sms_opt_in: smsOptIn === true,
   });
 
   return res.status(200).json({ success: true });

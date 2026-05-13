@@ -22,7 +22,6 @@
         <li><a href="volunteer.html">Get Involved</a></li>
 
         <li><a href="vote.html">Vote</a></li>
-        <li><a href="contact.html">Contact</a></li>
         <li><a href="donate.html" class="btn btn-nav">Donate</a></li>
       </ul>
     </div>
@@ -30,8 +29,8 @@
 
   <section class="page-hero">
     <div class="container">
-      <h1>Join the Movement</h1>
-      <p>Campaigns are won by people power. Sign up to volunteer and help Joe win.</p>
+      <h1>Get Involved</h1>
+      <p>Sign up to volunteer, invite Joe to an event, or just send us a message.</p>
     </div>
   </section>
 
@@ -40,7 +39,7 @@
       <img src="Public/mcgillicuddys.PNG" alt="Joe Walker at McGillicuddy's" class="volunteer-photo" />
 
       <form class="volunteer-form" id="volunteerForm">
-        <h3>Sign Up to Volunteer</h3>
+        <h3>Connect with the Campaign</h3>
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First Name</label>
@@ -60,6 +59,12 @@
             <label for="mobile">Phone</label>
             <input type="tel" id="mobile" name="mobile" placeholder="(555) 555-5555" />
           </div>
+        </div>
+        <div class="form-group form-checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="smsOptIn" name="smsOptIn" />
+            <span>I'd like to receive campaign text message updates. (Providing your phone number above is required to opt in.)</span>
+          </label>
         </div>
         <div class="form-group">
           <label for="street">Street Address</label>
@@ -104,6 +109,10 @@
             </label>
           </div>
         </div>
+        <div class="form-group">
+          <label for="volunteerMessage">Message <span style="font-weight:400;color:#6b7280">(optional)</span></label>
+          <textarea id="volunteerMessage" name="message" rows="4" placeholder="Have a question or something specific to share? Let us know."></textarea>
+        </div>
         <button type="submit" class="btn btn-primary full-width">Count Me In</button>
         <p class="form-note">By signing up, you agree to receive campaign updates. You can unsubscribe at any time.</p>
       </form>
@@ -124,7 +133,6 @@
           <a href="volunteer.html">Volunteer</a>
 
           <a href="vote.html">Vote</a>
-          <a href="contact.html">Contact</a>
         </nav>
         <a href="https://secure.winred.com/friends-of-joe-walker-26558a74/donate-today" target="_blank" rel="noopener" class="btn btn-primary">Donate</a>
       </div>
