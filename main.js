@@ -35,6 +35,148 @@ function fmtEventTime(isoStr) {
   return `${h}${m ? ':' + String(m).padStart(2, '0') : ''} ${ampm}`;
 }
 
+(async function loadPhotos() {
+  let photoEvents = [];
+  try {
+    const res = await fetch('/api/photos');
+    if (res.ok) {
+      const data = await res.json();
+      photoEvents = (data.events || []).filter(e => e.photos && e.photos.length);
+    }
+  } catch { /* swallow */ }
+
+  if (photoEvents.length) {
+    const voteLi = Array.from(navLinks.querySelectorAll('li'))
+      .find(li => li.querySelector('a[href="vote.html"]'));
+    if (voteLi) {
+      const trailLi = document.createElement('li');
+      trailLi.innerHTML = '<a href="on-the-trail.html">On the Trail</a>';
+      navLinks.insertBefore(trailLi, voteLi);
+      trailLi.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
+    }
+  }
+
+  const carouselWrap = document.getElementById('trailCarouselWrap');
+  const gallery      = document.getElementById('trailGallery');
+  if (!gallery) return;
+
+  if (!photoEvents.length) {
+    gallery.innerHTML = '<p class="events-loading">No photos yet. Check back soon.</p>';
+    return;
+  }
+
+  // --- Carousel (most recent event) ---
+  const featured = photoEvents[0];
+  const slides   = featured.photos.map(p => `
+    <div class="trail-carousel-slide">
+      <img src="${p.url}" alt="${p.caption || featured.title}" loading="lazy" />
+    </div>`).join('');
+  const dots = featured.photos.map((_, i) =>
+    `<button class="trail-carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="Photo ${i + 1}"></button>`
+  ).join('');
+
+  carouselWrap.innerHTML = `
+    <div class="trail-carousel" id="trailCarousel">
+      <div class="trail-carousel-event">${featured.title}</div>
+      <div class="trail-carousel-track">${slides}</div>
+      <button class="trail-carousel-btn prev">&#8592;</button>
+      <button class="trail-carousel-btn next">&#8594;</button>
+      <div class="trail-carousel-dots">${dots}</div>
+      <div class="trail-carousel-caption">${featured.photos[0].caption || ''}</div>
+    </div>`;
+
+  (function initCarousel() {
+    const carousel   = document.getElementById('trailCarousel');
+    const track      = carousel.querySelector('.trail-carousel-track');
+    const captionEl  = carousel.querySelector('.trail-carousel-caption');
+    const dotEls     = carousel.querySelectorAll('.trail-carousel-dot');
+    const photos     = featured.photos;
+    let current      = 0;
+    let timer;
+
+    function goTo(idx) {
+      current = (idx + photos.length) % photos.length;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      captionEl.textContent = photos[current].caption || '';
+      dotEls.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+
+    function startTimer() { timer = setInterval(() => goTo(current + 1), 4500); }
+    function stopTimer()  { clearInterval(timer); }
+
+    carousel.querySelector('.prev').addEventListener('click', () => { stopTimer(); goTo(current - 1); startTimer(); });
+    carousel.querySelector('.next').addEventListener('click', () => { stopTimer(); goTo(current + 1); startTimer(); });
+    dotEls.forEach(d => d.addEventListener('click', () => { stopTimer(); goTo(+d.dataset.idx); startTimer(); }));
+    carousel.addEventListener('mouseenter', stopTimer);
+    carousel.addEventListener('mouseleave', startTimer);
+    startTimer();
+  })();
+
+  // --- Gallery sections ---
+  function fmtTrailDate(iso) {
+    return new Date(iso.slice(0, 10) + 'T12:00:00').toLocaleDateString('en-US', {
+      month: 'long', day: 'numeric', year: 'numeric'
+    });
+  }
+
+  gallery.innerHTML = photoEvents.map(ev => {
+    const photos = [...ev.photos].sort((a, b) => a.order - b.order);
+    const grid = photos.map(p => `
+      <div class="trail-photo" data-url="${p.url}" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
+        <img src="${p.url}" alt="${p.caption || ev.title}" loading="lazy" />
+        ${p.caption ? `<p class="trail-photo-caption">${p.caption}</p>` : ''}
+      </div>`).join('');
+    return `
+      <div class="trail-section">
+        <div class="trail-section-header">
+          <h2>${ev.title}</h2>
+          <span class="trail-section-date">${fmtTrailDate(ev.date)}</span>
+        </div>
+        <div class="trail-grid">${grid}</div>
+      </div>`;
+  }).join('');
+
+  // --- Lightbox ---
+  const allPhotos = photoEvents.flatMap(ev =>
+    [...ev.photos].sort((a, b) => a.order - b.order).map(p => ({ url: p.url, caption: p.caption || '' }))
+  );
+
+  const lightbox = document.createElement('div');
+  lightbox.className = 'trail-lightbox';
+  lightbox.id = 'trailLightbox';
+  lightbox.innerHTML = `
+    <button class="trail-lightbox-close">&times;</button>
+    <button class="trail-lightbox-btn prev">&#8592;</button>
+    <img src="" alt="" />
+    <button class="trail-lightbox-btn next">&#8594;</button>
+    <div class="trail-lightbox-caption"></div>`;
+  document.body.appendChild(lightbox);
+
+  let lbIndex = 0;
+  const lbImg     = lightbox.querySelector('img');
+  const lbCaption = lightbox.querySelector('.trail-lightbox-caption');
+
+  function lbGoTo(idx) {
+    lbIndex = (idx + allPhotos.length) % allPhotos.length;
+    lbImg.src = allPhotos[lbIndex].url;
+    lbCaption.textContent = allPhotos[lbIndex].caption;
+  }
+
+  gallery.addEventListener('click', e => {
+    const photo = e.target.closest('.trail-photo');
+    if (!photo) return;
+    const url = photo.dataset.url;
+    lbIndex = allPhotos.findIndex(p => p.url === url);
+    lbGoTo(lbIndex);
+    lightbox.classList.add('open');
+  });
+
+  lightbox.querySelector('.trail-lightbox-close').addEventListener('click', () => lightbox.classList.remove('open'));
+  lightbox.querySelector('.prev').addEventListener('click', () => lbGoTo(lbIndex - 1));
+  lightbox.querySelector('.next').addEventListener('click', () => lbGoTo(lbIndex + 1));
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+})();
+
 (async function loadEvents() {
   let items = [];
   try {
@@ -300,6 +442,7 @@ if (yardSignForm) {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-backdrop.modal-open').forEach(m => m.classList.remove('modal-open'));
+    document.querySelectorAll('.trail-lightbox.open').forEach(l => l.classList.remove('open'));
   }
 });
 
