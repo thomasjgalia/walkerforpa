@@ -65,24 +65,26 @@ function fmtEventTime(isoStr) {
     return;
   }
 
-  // --- Carousel (most recent event) ---
-  const featured = photoEvents[0];
-  const slides   = featured.photos.map(p => `
+  // --- Carousel (all photos across all events) ---
+  const allCarouselPhotos = photoEvents.flatMap(ev =>
+    [...ev.photos].sort((a, b) => a.order - b.order).map(p => ({ ...p, eventTitle: ev.title }))
+  );
+  const slides = allCarouselPhotos.map(p => `
     <div class="trail-carousel-slide">
-      <img src="${p.url}" alt="${p.caption || featured.title}" loading="lazy" />
+      <img src="${p.url}" alt="${p.caption || p.eventTitle}" loading="lazy" />
     </div>`).join('');
-  const dots = featured.photos.map((_, i) =>
+  const dots = allCarouselPhotos.map((_, i) =>
     `<button class="trail-carousel-dot${i === 0 ? ' active' : ''}" data-idx="${i}" aria-label="Photo ${i + 1}"></button>`
   ).join('');
 
   carouselWrap.innerHTML = `
     <div class="trail-carousel" id="trailCarousel">
-      <div class="trail-carousel-event">${featured.title}</div>
+      <div class="trail-carousel-event">${allCarouselPhotos[0].eventTitle}</div>
       <div class="trail-carousel-track">${slides}</div>
       <button class="trail-carousel-btn prev">&#8592;</button>
       <button class="trail-carousel-btn next">&#8594;</button>
       <div class="trail-carousel-dots">${dots}</div>
-      <div class="trail-carousel-caption">${featured.photos[0].caption || ''}</div>
+      <div class="trail-carousel-caption">${allCarouselPhotos[0].caption || ''}</div>
     </div>`;
 
   (function initCarousel() {
@@ -90,7 +92,8 @@ function fmtEventTime(isoStr) {
     const track      = carousel.querySelector('.trail-carousel-track');
     const captionEl  = carousel.querySelector('.trail-carousel-caption');
     const dotEls     = carousel.querySelectorAll('.trail-carousel-dot');
-    const photos     = featured.photos;
+    const eventLabel = carousel.querySelector('.trail-carousel-event');
+    const photos     = allCarouselPhotos;
     let current      = 0;
     let timer;
 
@@ -98,6 +101,7 @@ function fmtEventTime(isoStr) {
       current = (idx + photos.length) % photos.length;
       track.style.transform = `translateX(-${current * 100}%)`;
       captionEl.textContent = photos[current].caption || '';
+      eventLabel.textContent = photos[current].eventTitle;
       dotEls.forEach((d, i) => d.classList.toggle('active', i === current));
     }
 
