@@ -46,12 +46,12 @@ function fmtEventTime(isoStr) {
   } catch { /* swallow */ }
 
   if (photoEvents.length) {
-    const voteLi = Array.from(navLinks.querySelectorAll('li'))
-      .find(li => li.querySelector('a[href="vote.html"]'));
-    if (voteLi) {
+    const donateLi = Array.from(navLinks.querySelectorAll('li'))
+      .find(li => li.querySelector('a[href="donate.html"]'));
+    if (donateLi) {
       const trailLi = document.createElement('li');
       trailLi.innerHTML = '<a href="on-the-trail.html">On the Trail</a>';
-      navLinks.insertBefore(trailLi, voteLi);
+      navLinks.insertBefore(trailLi, donateLi);
       trailLi.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
     }
   }
@@ -192,12 +192,12 @@ function fmtEventTime(isoStr) {
   } catch { /* swallow — no events shown */ }
 
   if (items.length) {
-    const contactLi = Array.from(navLinks.querySelectorAll('li'))
-      .find(li => li.querySelector('a[href="contact.html"]'));
-    if (contactLi) {
+    const donateLi2 = Array.from(navLinks.querySelectorAll('li'))
+      .find(li => li.querySelector('a[href="donate.html"]'));
+    if (donateLi2) {
       const eventsLi = document.createElement('li');
       eventsLi.innerHTML = '<a href="events.html">Events</a>';
-      navLinks.insertBefore(eventsLi, contactLi);
+      navLinks.insertBefore(eventsLi, donateLi2);
       eventsLi.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
     }
   }
