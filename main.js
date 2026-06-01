@@ -187,7 +187,8 @@ function fmtEventTime(isoStr) {
     const res = await fetch('/api/events');
     if (res.ok) {
       const data = await res.json();
-      items = data.items || [];
+      const today = new Date().toISOString().slice(0, 10);
+      items = (data.items || []).filter(e => e.event_date.slice(0, 10) >= today);
     }
   } catch { /* swallow — no events shown */ }
 
