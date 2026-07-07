@@ -181,6 +181,66 @@ function fmtEventTime(isoStr) {
   lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
 })();
 
+(async function loadSightings() {
+  let items = [];
+  try {
+    const res = await fetch('/api/sightings');
+    if (res.ok) {
+      const data = await res.json();
+      items = data.items || [];
+    }
+  } catch { /* swallow */ }
+
+  if (items.length) {
+    const donateLi = Array.from(navLinks.querySelectorAll('li'))
+      .find(li => li.querySelector('a[href="donate.html"]'));
+    if (donateLi) {
+      const walkerLi = document.createElement('li');
+      walkerLi.innerHTML = '<a href="wheres-walker.html">Where\'s Walker?</a>';
+      navLinks.insertBefore(walkerLi, donateLi);
+      walkerLi.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
+    }
+  }
+
+  const gallery = document.getElementById('sightingsGallery');
+  if (!gallery) return;
+
+  if (!items.length) {
+    gallery.innerHTML = '<p class="events-loading">No sightings yet. Be the first!</p>';
+    return;
+  }
+
+  const activityLabels = {
+    door_knocking: 'Door Knocking',
+    dog_walking: 'Dog Walking',
+    event: 'At an Event',
+    around_town: 'Around Town',
+    other: 'Other',
+  };
+
+  function fmtSightingDate(iso) {
+    return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  gallery.className = 'sightings-grid';
+  gallery.innerHTML = items.map(s => {
+    const label = activityLabels[s.activity] || s.activity || '';
+    const parts = [label];
+    if (s.location) parts.push(s.location);
+    const datePart = s.date ? fmtSightingDate(s.date) : '';
+    const metaStr = [parts.join(', '), datePart].filter(Boolean).join(', ');
+    const caption = `${s.first_name} ${s.last_initial}. — ${metaStr}`;
+    return `
+      <div class="sighting-card">
+        <div class="sighting-photo">
+          <img src="${s.photo_url}" alt="${caption}" loading="lazy" />
+        </div>
+        <p class="sighting-caption">${caption}</p>
+        ${s.activity_detail ? `<p class="sighting-detail">&ldquo;${s.activity_detail}&rdquo;</p>` : ''}
+      </div>`;
+  }).join('');
+})();
+
 (async function loadEvents() {
   let items = [];
   try {
