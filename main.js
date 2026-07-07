@@ -196,7 +196,7 @@ function fmtEventTime(isoStr) {
       .find(li => li.querySelector('a[href="donate.html"]'));
     if (donateLi) {
       const walkerLi = document.createElement('li');
-      walkerLi.innerHTML = '<a href="wheres-walker.html">Where\'s Walker?</a>';
+      walkerLi.innerHTML = '<a href="wheres-walker.html" class="nav-pinnie-link">&#128064; Where\'s Walker?</a>';
       navLinks.insertBefore(walkerLi, donateLi);
       walkerLi.querySelector('a').addEventListener('click', () => navLinks.classList.remove('open'));
     }

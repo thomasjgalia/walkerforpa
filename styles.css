@@ -123,6 +123,19 @@ a:hover { color: var(--blue); }
   color: var(--white) !important;
 }
 
+.nav-pinnie-link {
+  background: var(--white) !important;
+  color: var(--red) !important;
+  font-weight: 700 !important;
+  border-radius: 999px !important;
+  padding: 6px 14px !important;
+  font-size: 0.9rem !important;
+}
+.nav-pinnie-link:hover {
+  background: var(--gray-light) !important;
+  color: var(--red) !important;
+}
+
 .full-width { width: 100%; }
 
 /* ============================================================
