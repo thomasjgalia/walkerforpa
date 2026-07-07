@@ -222,6 +222,8 @@ function fmtEventTime(isoStr) {
     return new Date(iso + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  items.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
   gallery.className = 'sightings-grid';
   gallery.innerHTML = items.map(s => {
     const label = activityLabels[s.activity] || s.activity || '';
