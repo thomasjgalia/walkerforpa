@@ -260,6 +260,51 @@ function fmtEventTime(isoStr) {
       </div>`;
   }).join('');
 
+  // Lightbox
+  const sightingPhotos = items.map(s => {
+    const label = activityLabels[s.activity] || s.activity || '';
+    const parts = [label];
+    if (s.location) parts.push(s.location);
+    const datePart = s.date ? fmtSightingDate(s.date) : '';
+    const metaStr = [parts.join(', '), datePart].filter(Boolean).join(', ');
+    return { url: s.photo_url, caption: `${s.first_name} ${s.last_initial}. — ${metaStr}` };
+  });
+
+  const slb = document.createElement('div');
+  slb.className = 'trail-lightbox';
+  slb.id = 'sightingLightbox';
+  slb.innerHTML = `
+    <button class="trail-lightbox-close">&times;</button>
+    <button class="trail-lightbox-btn prev">&#8592;</button>
+    <img src="" alt="" />
+    <button class="trail-lightbox-btn next">&#8594;</button>
+    <div class="trail-lightbox-caption"></div>`;
+  document.body.appendChild(slb);
+
+  let slbIndex = 0;
+  const slbImg     = slb.querySelector('img');
+  const slbCaption = slb.querySelector('.trail-lightbox-caption');
+
+  function slbGoTo(idx) {
+    slbIndex = (idx + sightingPhotos.length) % sightingPhotos.length;
+    slbImg.src = sightingPhotos[slbIndex].url;
+    slbCaption.textContent = sightingPhotos[slbIndex].caption;
+  }
+
+  gallery.addEventListener('click', e => {
+    const card = e.target.closest('.sighting-card');
+    if (!card) return;
+    const url = card.querySelector('img').src;
+    slbIndex = sightingPhotos.findIndex(p => p.url === url);
+    slbGoTo(slbIndex < 0 ? 0 : slbIndex);
+    slb.classList.add('open');
+  });
+
+  slb.querySelector('.trail-lightbox-close').addEventListener('click', () => slb.classList.remove('open'));
+  slb.querySelector('.prev').addEventListener('click', () => slbGoTo(slbIndex - 1));
+  slb.querySelector('.next').addEventListener('click', () => slbGoTo(slbIndex + 1));
+  slb.addEventListener('click', e => { if (e.target === slb) slb.classList.remove('open'); });
+
   // Run after each image loads so heights are accurate
   let pending = 0;
   gallery.querySelectorAll('img').forEach(img => {
