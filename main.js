@@ -224,6 +224,24 @@ function fmtEventTime(isoStr) {
 
   items.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
 
+  function masonryLayout() {
+    const cards = Array.from(gallery.children);
+    if (!cards.length) return;
+    const gap = 16;
+    const w = gallery.offsetWidth;
+    const cols = w >= 700 ? 3 : w >= 440 ? 2 : 1;
+    const colW = (w - gap * (cols - 1)) / cols;
+    const heights = Array(cols).fill(0);
+    cards.forEach(card => {
+      card.style.width = colW + 'px';
+      const col = heights.indexOf(Math.min(...heights));
+      card.style.left = col * (colW + gap) + 'px';
+      card.style.top = heights[col] + 'px';
+      heights[col] += card.offsetHeight + gap;
+    });
+    gallery.style.height = Math.max(...heights) + 'px';
+  }
+
   gallery.className = 'sightings-grid';
   gallery.innerHTML = items.map(s => {
     const label = activityLabels[s.activity] || s.activity || '';
@@ -241,6 +259,23 @@ function fmtEventTime(isoStr) {
         ${s.activity_detail ? `<p class="sighting-detail">&ldquo;${s.activity_detail}&rdquo;</p>` : ''}
       </div>`;
   }).join('');
+
+  // Run after each image loads so heights are accurate
+  let pending = 0;
+  gallery.querySelectorAll('img').forEach(img => {
+    if (!img.complete) {
+      pending++;
+      img.addEventListener('load',  () => { pending--; masonryLayout(); });
+      img.addEventListener('error', () => { pending--; masonryLayout(); });
+    }
+  });
+  masonryLayout();
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(masonryLayout, 100);
+  });
 })();
 
 (async function loadEvents() {

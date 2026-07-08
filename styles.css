@@ -1330,17 +1330,15 @@ h2 {
 }
 
 .sightings-grid {
-  column-count: 3;
-  column-gap: 16px;
+  position: relative;
 }
 
 .sighting-card {
-  break-inside: avoid;
+  position: absolute;
   border-radius: 10px;
   overflow: hidden;
   background: var(--white);
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  margin-bottom: 16px;
 }
 
 .sighting-photo img {
@@ -1365,13 +1363,6 @@ h2 {
   line-height: 1.4;
 }
 
-@media (max-width: 700px) {
-  .sightings-grid { column-count: 2; }
-}
-
-@media (max-width: 440px) {
-  .sightings-grid { column-count: 1; }
-}
 
 /* ============================================================
    EVENTS
