@@ -229,7 +229,7 @@ function fmtEventTime(isoStr) {
     if (!cards.length) return;
     const gap = 16;
     const w = gallery.offsetWidth;
-    const cols = w >= 700 ? 3 : w >= 440 ? 2 : 1;
+    const cols = w >= 900 ? 4 : w >= 600 ? 3 : w >= 440 ? 2 : 1;
     const colW = (w - gap * (cols - 1)) / cols;
     const heights = Array(cols).fill(0);
     cards.forEach(card => {
@@ -242,23 +242,47 @@ function fmtEventTime(isoStr) {
     gallery.style.height = Math.max(...heights) + 'px';
   }
 
+  const PAGE_SIZE = 24;
+  let shown = 0;
+
   gallery.className = 'sightings-grid';
-  gallery.innerHTML = items.map(s => {
-    const label = activityLabels[s.activity] || s.activity || '';
-    const parts = [label];
-    if (s.location) parts.push(s.location);
-    const datePart = s.date ? fmtSightingDate(s.date) : '';
-    const metaStr = [parts.join(', '), datePart].filter(Boolean).join(', ');
-    const caption = `${s.first_name} ${s.last_initial}. — ${metaStr}`;
-    return `
-      <div class="sighting-card">
+
+  const loadMoreBtn = document.createElement('button');
+  loadMoreBtn.className = 'btn btn-outline sightings-load-more';
+  loadMoreBtn.textContent = 'Load more';
+  gallery.insertAdjacentElement('afterend', loadMoreBtn);
+
+  function appendBatch() {
+    const end = Math.min(shown + PAGE_SIZE, items.length);
+    items.slice(shown, end).forEach(s => {
+      const label = activityLabels[s.activity] || s.activity || '';
+      const parts = [label];
+      if (s.location) parts.push(s.location);
+      const datePart = s.date ? fmtSightingDate(s.date) : '';
+      const metaStr = [parts.join(', '), datePart].filter(Boolean).join(', ');
+      const caption = `${s.first_name} ${s.last_initial}. — ${metaStr}`;
+      const card = document.createElement('div');
+      card.className = 'sighting-card';
+      card.innerHTML = `
         <div class="sighting-photo">
           <img src="${s.photo_url}" alt="${caption}" loading="lazy" />
         </div>
         <p class="sighting-caption">${caption}</p>
-        ${s.activity_detail ? `<p class="sighting-detail">&ldquo;${s.activity_detail}&rdquo;</p>` : ''}
-      </div>`;
-  }).join('');
+        ${s.activity_detail ? `<p class="sighting-detail">&ldquo;${s.activity_detail}&rdquo;</p>` : ''}`;
+      gallery.appendChild(card);
+      const img = card.querySelector('img');
+      if (!img.complete) {
+        img.addEventListener('load', masonryLayout);
+        img.addEventListener('error', masonryLayout);
+      }
+    });
+    shown = end;
+    masonryLayout();
+    loadMoreBtn.style.display = shown >= items.length ? 'none' : '';
+  }
+
+  appendBatch();
+  loadMoreBtn.addEventListener('click', appendBatch);
 
   // Lightbox
   const sightingPhotos = items.map(s => {
@@ -304,17 +328,6 @@ function fmtEventTime(isoStr) {
   slb.querySelector('.prev').addEventListener('click', () => slbGoTo(slbIndex - 1));
   slb.querySelector('.next').addEventListener('click', () => slbGoTo(slbIndex + 1));
   slb.addEventListener('click', e => { if (e.target === slb) slb.classList.remove('open'); });
-
-  // Run after each image loads so heights are accurate
-  let pending = 0;
-  gallery.querySelectorAll('img').forEach(img => {
-    if (!img.complete) {
-      pending++;
-      img.addEventListener('load',  () => { pending--; masonryLayout(); });
-      img.addEventListener('error', () => { pending--; masonryLayout(); });
-    }
-  });
-  masonryLayout();
 
   let resizeTimer;
   window.addEventListener('resize', () => {
