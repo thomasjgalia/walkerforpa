@@ -246,6 +246,7 @@ function fmtEventTime(isoStr) {
   let shown = 0;
 
   gallery.className = 'sightings-grid';
+  gallery.innerHTML = '';
 
   const loadMoreBtn = document.createElement('button');
   loadMoreBtn.className = 'btn btn-outline sightings-load-more';
